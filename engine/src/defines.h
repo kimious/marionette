@@ -1,5 +1,10 @@
 #pragma once
 
+// scopes
+#define global static
+#define local static
+#define internal static
+
 // Unsigned int types.
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -51,17 +56,9 @@ STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 bytes.");
 #endif
 
 #ifdef MEXPORT
-// Exports
-#ifdef _MSC_VER
-#define MAPI __declspec(dllexport)
-#else
-#define MAPI __attribute__((visibility("default")))
+#define EXPORT __declspec(dllexport)
 #endif
-#else
-// Imports
-#ifdef _MSC_VER
-#define MAPI __declspec(dllimport)
-#else
-#define MAPI
-#endif
+
+#ifdef MIMPORT
+#define EXPORT __declspec(dllimport)
 #endif

@@ -16,6 +16,7 @@ REM -Wall -Werror
 SET includeFlags=-Isrc -I%VULKAN_SDK%/Include
 SET linkerFlags=-luser32 -lvulkan-1 -L%VULKAN_SDK%/Lib
 SET defines=-D_DEBUG -DMEXPORT -D_CRT_SECURE_NO_WARNINGS
+DEL ..\bin\%assembly%.*
 
 ECHO "Building %assembly%%..."
 clang %files% %compilerFlags% -o ../bin/%assembly%.dll %defines% %includeFlags% %linkerFlags%
