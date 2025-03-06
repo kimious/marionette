@@ -22,8 +22,8 @@ typedef enum log_level {
     LOG_LEVEL_TRACE
 } log_level;
 
-b8 start_logger();
-void stop_logger();
+b8 logger_start();
+void logger_stop();
 
 EXPORT void log_message(log_level level, const char* message, ...);
 

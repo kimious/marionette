@@ -9,28 +9,28 @@
 
 #include "utils/logger.h"
 
-typedef struct win32_internal_state {
-    HINSTANCE instance_handle;
+typedef struct Win32_State {
+    HINSTANCE module_instance_handle;
     HWND window_handle;
-} win32_internal_state;
+} Win32_State;
 
 global f64 clock_frequency;
 global LARGE_INTEGER start_time;
 
-LRESULT CALLBACK win32_process_message(HWND h_window, u32 message, WPARAM w_param, LPARAM l_param);
+LRESULT CALLBACK win32_process_message(HWND window_handle, u32 message, WPARAM w_param, LPARAM l_param);
 
-b8 platform_start(platform_state* state, const char* name, i32 x, i32 y, i32 width, i32 height) {
-    state->internal_state = malloc(sizeof(win32_internal_state));
-    win32_internal_state* internal_state = (win32_internal_state*) state->internal_state;
+b8 platform_start(Platform* platform, const char* name, i32 x, i32 y, i32 width, i32 height) {
+    platform->state = malloc(sizeof(Win32_State));
+    Win32_State* win32_state = (Win32_State*) platform->state;
 
-    internal_state->instance_handle = GetModuleHandleA(0);
+    win32_state->module_instance_handle = GetModuleHandleA(0);
 
     // NOTE: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassa
     WNDCLASSA window_class;
     memset(&window_class, 0, sizeof(window_class));
-    window_class.hIcon = LoadIcon(internal_state->instance_handle, IDI_APPLICATION);
+    window_class.hIcon = LoadIcon(win32_state->module_instance_handle, IDI_APPLICATION);
     window_class.hCursor = LoadCursor(0, IDC_ARROW);
-    window_class.hInstance = internal_state->instance_handle;
+    window_class.hInstance = win32_state->module_instance_handle;
     window_class.style = CS_DBLCLKS;
     window_class.cbClsExtra = 0;
     window_class.cbWndExtra = 0;
@@ -70,7 +70,7 @@ b8 platform_start(platform_state* state, const char* name, i32 x, i32 y, i32 wid
     HWND window_handle = CreateWindowExA(
         window_ex_styles, window_class.lpszClassName, name, 
         window_styles, window_x, window_y, window_width, window_height, 
-        0, 0, internal_state->instance_handle, 0
+        0, 0, win32_state->module_instance_handle, 0
     );
 
     if (!window_handle) {
@@ -79,10 +79,10 @@ b8 platform_start(platform_state* state, const char* name, i32 x, i32 y, i32 wid
         return FALSE;
     }
 
-    internal_state->window_handle = window_handle;
+    win32_state->window_handle = window_handle;
 
     // NOTE: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
-    ShowWindow(internal_state->window_handle, SW_SHOW);
+    ShowWindow(win32_state->window_handle, SW_SHOW);
 
     LARGE_INTEGER frequency;
     QueryPerformanceFrequency(&frequency);
@@ -93,20 +93,24 @@ b8 platform_start(platform_state* state, const char* name, i32 x, i32 y, i32 wid
     return TRUE;
 }
 
-b8 platform_stop(platform_state* state) {
-    win32_internal_state* internal_state = (win32_internal_state*) state->internal_state;
+b8 platform_stop(Platform* platform) {
+    Win32_State* win32_state = (Win32_State*) platform->state;
     
-    if (internal_state->window_handle) {
-        if (!DestroyWindow(internal_state->window_handle)) {
+    if (win32_state->window_handle) {
+        if (!DestroyWindow(win32_state->window_handle)) {
             return FALSE;
         }
-        internal_state->window_handle = 0;
+        win32_state->window_handle = 0;
     }
 
     return TRUE;
 }
 
-b8 platform_pull_messages(platform_state* state) {
+b8 platform_is_initialized(Platform* platform) {
+    return platform->state != 0;
+}
+
+b8 platform_pull_messages(Platform* platform) {
     MSG message;
 
     // NOTE: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagea
@@ -118,7 +122,7 @@ b8 platform_pull_messages(platform_state* state) {
     return TRUE;
 }
 
-void* platform_alloc(u64 size, b8 _is_aligned) {
+void* platform_allocate(u64 size, b8 _is_aligned) {
     return malloc(size);
 }
 

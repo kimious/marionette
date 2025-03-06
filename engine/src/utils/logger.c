@@ -7,12 +7,12 @@
 #include <string.h>
 #include <stdarg.h>
 
-b8 start_logger() {
+b8 logger_start() {
     // TODO: create the log file in fs
     return TRUE;
 }
 
-void stop_logger() {
+void logger_stop() {
     // TODO: flush log messages
 }
 
