@@ -106,10 +106,6 @@ b8 platform_stop(Platform* platform) {
     return TRUE;
 }
 
-b8 platform_is_initialized(Platform* platform) {
-    return platform->state != 0;
-}
-
 b8 platform_pull_messages(Platform* platform) {
     MSG message;
 
