@@ -41,7 +41,7 @@ b8 platform_start(Platform* platform, const char* name, i32 x, i32 y, i32 width,
     if (!RegisterClassA(&window_class)) {
         MessageBoxA(0, "failed to register window class", "Fatal error", MB_ICONEXCLAMATION | MB_OK);
         FATAL("failed to register window class");
-        return FALSE;
+        return false;
     }
 
     u32 client_x = x;
@@ -76,7 +76,7 @@ b8 platform_start(Platform* platform, const char* name, i32 x, i32 y, i32 width,
     if (!window_handle) {
         MessageBoxA(0, "failed to create window", "Fatal error", MB_ICONEXCLAMATION | MB_OK);
         FATAL("failed to create window class");
-        return FALSE;
+        return false;
     }
 
     win32_state->window_handle = window_handle;
@@ -90,7 +90,7 @@ b8 platform_start(Platform* platform, const char* name, i32 x, i32 y, i32 width,
 
     QueryPerformanceCounter(&start_time);
 
-    return TRUE;
+    return true;
 }
 
 b8 platform_stop(Platform* platform) {
@@ -98,12 +98,12 @@ b8 platform_stop(Platform* platform) {
     
     if (win32_state->window_handle) {
         if (!DestroyWindow(win32_state->window_handle)) {
-            return FALSE;
+            return false;
         }
         win32_state->window_handle = 0;
     }
 
-    return TRUE;
+    return true;
 }
 
 b8 platform_pull_messages(Platform* platform) {
@@ -115,7 +115,7 @@ b8 platform_pull_messages(Platform* platform) {
         DispatchMessage(&message);
     }
 
-    return TRUE;
+    return true;
 }
 
 void* platform_allocate(u64 size, b8 _is_aligned) {

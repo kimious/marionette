@@ -20,19 +20,19 @@ b8 game_init(Game* game) {
     game->update = game_update; 
     game->render = game_render;
 
-    game->state = platform_allocate(sizeof(game_render), FALSE);
+    game->state = platform_allocate(sizeof(game_render), false);
 
-    return TRUE;
+    return true;
 }
 
 b8 game_update(Game* game, f32 elapsed_time) {
     CAST(GameState*, state, game->state);
     state->elasped_time = elapsed_time;
-    return TRUE;
+    return true;
 }
 
 b8 game_render(Game* game, f32 elapsed_time) {
     CAST(GameState*, state, game->state);
     DEBUG("rendering game, time = %f", state->elasped_time);
-    return TRUE;
+    return true;
 }

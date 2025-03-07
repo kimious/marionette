@@ -9,7 +9,7 @@
 
 b8 logger_start() {
     // TODO: create the log file in fs
-    return TRUE;
+    return true;
 }
 
 void logger_stop() {

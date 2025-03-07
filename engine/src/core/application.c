@@ -7,8 +7,8 @@
 b8 application_init(Application* application, Game* game) {
     application->game = game;
 
-    application->is_running = TRUE;
-    application->is_suspended = FALSE;
+    application->is_running = true;
+    application->is_suspended = false;
     
     logger_start();    
 
@@ -30,10 +30,10 @@ b8 application_init(Application* application, Game* game) {
         game->config.height
     )) {
         ERROR("failed starting up platform");
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 b8 application_start_loop(Application* application) {
@@ -42,13 +42,13 @@ b8 application_start_loop(Application* application) {
 
         if (!application->game->update(application->game, 13.0)) {
             FATAL("Could not update the game state");
-            application->is_running = FALSE;
+            application->is_running = false;
             break;
         }
 
         if (!application->game->render(application->game, 13.0)) {
             FATAL("COuld not render the game state");
-            application->is_running = FALSE;
+            application->is_running = false;
             break;
         }
     }
@@ -57,5 +57,5 @@ b8 application_start_loop(Application* application) {
 
     logger_stop();
 
-    return TRUE;
+    return true;
 }
